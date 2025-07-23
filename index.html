@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>South Florida RP | Appeal Form</title>
-  <link rel="icon" href="logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South Florida RP Appeal</title>
   <style>
     :root {
       --bg-light: #ffffff;
@@ -22,7 +21,7 @@
       transition: background 0.3s, color 0.3s;
       background: var(--bg-dark);
       color: var(--text-dark);
-      padding: 2rem;
+      padding: 1rem;
     }
 
     .light-mode {
@@ -48,11 +47,13 @@
       text-align: center;
       margin-bottom: 1.5rem;
       color: var(--accent);
+      font-size: 1.8rem;
     }
 
     label {
       display: block;
       margin-top: 1rem;
+      font-weight: 500;
     }
 
     input, textarea, select, button {
@@ -62,6 +63,7 @@
       border-radius: 8px;
       border: none;
       font-size: 1rem;
+      box-sizing: border-box;
     }
 
     input, textarea, select {
@@ -107,6 +109,7 @@
       background: var(--accent);
       color: white;
       cursor: pointer;
+      z-index: 1000;
     }
 
     img.logo {
@@ -114,67 +117,64 @@
       margin: 0 auto 1rem;
       height: 80px;
       border-radius: 50%;
+      max-width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      #toggle-dark {
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
   <button id="toggle-dark">Toggle Dark Mode</button>
-
+  <img class="logo" src="logo.png" alt="SFRP Logo" />
   <div class="container fade-in">
-    <img src="logo.png" alt="SFRP Logo" class="logo" />
     <h1>South Florida RP Appeal</h1>
-
-    <div id="step1">
-      <label>Are you appealing a Department Appeal, Staff Appeal, or Member Action Appeal?</label>
-      <select onchange="goToStep(this.value)">
-        <option disabled selected value="">Select one</option>
-        <option value="department">Department Appeal</option>
-        <option value="staff">Staff Appeal</option>
-        <option value="member">Member Action Appeal</option>
+    <form id="form">
+      <label for="appealType">Are you appealing a department, staff, or member action?</label>
+      <select id="appealType" required>
+        <option value="Department Appeal">Department Appeal</option>
+        <option value="Staff Appeal">Staff Appeal</option>
+        <option value="Member Action Appeal">Member Action Appeal</option>
       </select>
-    </div>
 
-    <form id="form" style="display:none;">
-      <div id="step2"></div>
+      <label for="roblox">What is your Roblox username and ID?</label>
+      <input type="text" id="roblox" required />
 
-      <label>What is your Roblox username and ID?</label>
-      <input type="text" id="roblox" required placeholder="e.g. MosaabHelal / 123456789" />
+      <label for="discord">What is your Discord username and ID?</label>
+      <input type="text" id="discord" required />
 
-      <label>What is your Discord username and ID?</label>
-      <input type="text" id="discord" required placeholder="e.g. ducky#0001 / 123456789012345678" />
+      <label for="whatHappened">What are you appealing for? (e.g., strike, shutdown)</label>
+      <input type="text" id="whatHappened" required />
 
-      <label>Please explain what happened:</label>
-      <textarea id="whatHappened" required></textarea>
-
-      <label>State your reason for the appeal:</label>
-      <textarea id="appealReason" required></textarea>
+      <label for="appealReason">State your appeal reason:</label>
+      <textarea id="appealReason" rows="4" required></textarea>
 
       <button type="submit">Submit Appeal</button>
     </form>
   </div>
 
   <script>
-    function goToStep(type) {
-      document.getElementById("step1").style.display = "none";
-      document.getElementById("form").style.display = "block";
-      let step2 = document.getElementById("step2");
-
-      let options = {
-        department: ["Department Shutdown", "Unlawful Departmental Punishment", "Other"],
-        staff: ["Strike", "Warning", "Blacklist", "Other"],
-        member: ["Warn", "Kick (In-game)", "Ban (In-game)", "Ban (Discord)", "Other"]
-      };
-
-      let label = {
-        department: "What are you appealing for (Department)?",
-        staff: "What are you appealing for (Staff)?",
-        member: "What are you appealing for (Member Action)?"
-      };
-
-      step2.innerHTML = `<label>${label[type]}</label><select id="appealType" required>` +
-        options[type].map(o => `<option value="${o}">${o}</option>`).join('') +
-        `</select>`;
-    }
+    document.getElementById("toggle-dark").onclick = function () {
+      document.body.classList.toggle("light-mode");
+    };
 
     document.getElementById("form").onsubmit = function(e) {
       e.preventDefault();
@@ -196,7 +196,7 @@
         content: "<@&1390315125520728166> 📬 **New Appeal Received!**",
         embeds: [{
           title: "📝 Appeal Submission",
-          color: 2899532,
+          color: 0x2c89ff,
           fields: [
             { name: "Appeal Type", value: appealFor, inline: false },
             { name: "Roblox", value: roblox, inline: true },
@@ -231,12 +231,6 @@
         alert("❌ Error submitting appeal.");
         console.error("Submission error:", error);
       });
-    };
-
-    // Dark Mode Toggle
-    const toggle = document.getElementById("toggle-dark");
-    toggle.onclick = () => {
-      document.body.classList.toggle("light-mode");
     };
   </script>
 </body>
