@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SFRP Appeal Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #2c89ff;
+      color: white;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logo.png" alt="SFRP Logo" class="logo" />
+    <div id="step1">
+      <label>Are you appealing a:</label>
+      <select onchange="goToStep(this.value)">
+        <option value="">-- Select --</option>
+        <option value="department">Department Appeal</option>
+        <option value="staff">Staff Appeal</option>
+        <option value="member">Member Action Appeal</option>
+      </select>
+    </div>
+
+    <form id="form" style="display:none;">
+      <div id="step2"></div>
+      <label>Please explain what happened:</label>
+      <textarea id="whatHappened" required></textarea>
+
+      <label>State your reason for the appeal:</label>
+      <textarea id="appealReason" required></textarea>
+
+      <button type="submit">Submit Appeal</button>
+    </form>
+  </div>
+
+  <script>
+    function goToStep(type) {
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("form").style.display = "block";
+      let step2 = document.getElementById("step2");
+
+      let options = {
+        department: ["Department Shutdown", "Unlawful Departmental Punishment", "Other"],
+        staff: ["Strike", "Warning", "Blacklist", "Other"],
+        member: ["Warn", "Kick (In-game)", "Ban (In-game)", "Ban (Discord)", "Other"]
+      };
+
+      let label = {
+        department: "What are you appealing for (Department)?",
+        staff: "What are you appealing for (Staff)?",
+        member: "What are you appealing for (Member Action)?"
+      };
+
+      step2.innerHTML = `<label>${label[type]}</label><select id="appealType">` +
+        options[type].map(o => `<option value="${o}">${o}</option>`).join('') +
+        `</select>`;
+    }
+
+    document.getElementById("form").onsubmit = function(e) {
+      e.preventDefault();
+      const appealFor = document.getElementById("appealType").value;
+      const whatHappened = document.getElementById("whatHappened").value;
+      const appealReason = document.getElementById("appealReason").value;
+
+      alert("Appeal Submitted:\n\nType: " + appealFor + "\nWhat Happened: " + whatHappened + "\nReason: " + appealReason);
+
+      // Optionally send this data to a webhook/form handling backend
+    };
+  </script>
+</body>
+</html>
